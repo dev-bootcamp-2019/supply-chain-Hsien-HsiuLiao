@@ -12,21 +12,21 @@ contract('SupplyChain', function(accounts) {
 
     it("should add an item with the provided name and price", async() => {
         const supplyChain = await SupplyChain.deployed()
-
+        
         var eventEmitted = false
-
-        var event = supplyChain.ForSale()
+        
+         var event = supplyChain.ForSale()
         await event.watch((err, res) => {
             sku = res.args.sku.toString(10)
             eventEmitted = true
-        })
+        }) 
 
         const name = "book"
 
         await supplyChain.addItem(name, price, {from: alice})
-
+        
         const result = await supplyChain.fetchItem.call(sku)
-
+        console.log('fetchitem')
         assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
         assert.equal(result[2].toString(10), price, 'the price of the last added item does not match the expected value')
         assert.equal(result[3].toString(10), 0, 'the state of the item should be "For Sale", which should be declared first in the State Enum')
