@@ -36,10 +36,10 @@ contract SupplyChain {
   
   /* Create 4 events with the same name as each possible State (see above)
     Each event should accept one argument, the sku*/
-  event ForSale(uint _sku);
-  event Sold(uint _sku);
-  event Shipped(uint _sku);
-  event Received(uint _sku);
+  event ForSale(uint sku);
+  event Sold(uint sku);
+  event Shipped(uint sku);
+  event Received(uint sku);
 /* Create a modifer that checks if the msg.sender is the owner of the contract */
  /* modifier checkOwner { require(msg.sender == owner); _;} */
 
@@ -85,36 +85,40 @@ contract SupplyChain {
     if the buyer paid enough, and check the value after the function is called to make sure the buyer is
     refunded any excess ether sent. Remember to call the event associated with this function!*/
 
-  /*function buyItem(uint sku)
-    public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku)
+  function buyItem(uint sku)
+    public payable forSale(sku) paidEnough(items[sku].price) checkValue(sku) 
+    //returns(bool)
   {
-    //emit Sold(sku);
+    emit Sold(sku);
     //transfer money to seller, 
-    items[sku].seller.transfer(msg.value);
+    items[sku].seller.transfer(items[sku].price);
+    //items[sku].seller.balance += msg.value;
+    
     //set buyer as person who called, msg.sender
     items[sku].buyer = msg.sender;
     //set state to Sold
     items[sku].state = State.Sold;
-    emit Sold(sku);
-  }*/
+    //emit Sold(sku);
+    //return true;
+  }
 
   /* Add 2 modifiers to check if the item is sold already, and that the person calling this function
   is the seller. Change the state of the item to shipped. Remember to call the event associated with this function!*/
-  /*function shipItem(uint sku)
+  function shipItem(uint sku)
     public sold(sku) verifyCaller(items[sku].seller)
   {
     items[sku].state = State.Shipped;
     emit Shipped(sku);
-  }*/
+  }
 
   /* Add 2 modifiers to check if the item is shipped already, and that the person calling this function
   is the buyer. Change the state of the item to received. Remember to call the event associated with this function!*/
-  /*function receiveItem(uint sku)
+  function receiveItem(uint sku)
     public shipped(sku) verifyCaller(items[sku].buyer)
   {
     items[sku].state = State.Received;
     emit Received(sku);
-  }*/
+  }
 
   /* We have these functions completed so we can run tests, just ignore it :) */
   function fetchItem(uint _sku) public view returns (string name, uint sku, uint price, uint state, address seller, address buyer) {
